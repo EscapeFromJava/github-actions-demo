@@ -49,8 +49,9 @@ jobs:
           EOF
         shell: bash
 
-#      - name: Wait for application to be available
-#        run: sleep 10
-
-#      - name: Check application health
-#        run: curl --fail http://localhost:8080/actuator/health
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: http://localhost:8080/actuator/health
+          max-attempts: 3
+          retry-delay: 5s
