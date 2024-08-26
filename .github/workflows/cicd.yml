@@ -45,6 +45,6 @@ jobs:
         docker pull reskeartur/github-actions-demo:latest
         docker stop ${CONTAINER_NAME} || true
         docker rm ${CONTAINER_NAME} || true
-        docker run -d --name ${CONTAINER_NAME} -p 8080:8080 reskeartur/github-actions-demo:latest
+        docker run -d --name ${CONTAINER_NAME} -p 8080:8080 -e DEMO_NAME=${DEMO_NAME} reskeartur/github-actions-demo:latest
         EOF
       shell: bash
