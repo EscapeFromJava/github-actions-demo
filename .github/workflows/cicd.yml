@@ -39,6 +39,7 @@ jobs:
         VPS_USER: ${{ secrets.VPS_USER }}
         VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+        DEMO_NAME: ${{ vars.DEMO_NAME }}
       run: |
         sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
         docker pull reskeartur/github-actions-demo:latest

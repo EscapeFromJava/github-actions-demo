@@ -1,5 +1,6 @@
 package com.reske.githubactionsdemo;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,12 @@ public class GithubActionsDemoApplication {
     @RestController
     public static class HelloController {
 
+        @Value("${demo.name}")
+        private String name;
+
         @GetMapping("/hello")
         public String hello() {
-            return "Hello New World";
+            return "Hello " + name;
         }
 
     }
