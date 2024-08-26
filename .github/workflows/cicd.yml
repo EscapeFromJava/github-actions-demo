@@ -10,41 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Build with Maven
-      run: mvn clean install
+      - name: Build with Maven
+        run: mvn clean install
 
-    - name: Build and push Docker image
-      uses: mr-smithers-excellent/docker-build-push@v6
-      with:
-        image: reskeartur/github-actions-demo
-        tags: latest
-        registry: docker.io
-        dockerfile: Dockerfile
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: reskeartur/github-actions-demo
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Deploy to VPS
-      env:
-        VPS_HOST: ${{ secrets.VPS_HOST }}
-        VPS_USER: ${{ secrets.VPS_USER }}
-        VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
-        CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
-        DEMO_NAME: ${{ vars.DEMO_NAME }}
-      run: |
-        sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
-        docker pull reskeartur/github-actions-demo:latest
-        docker stop ${CONTAINER_NAME} || true
-        docker rm ${CONTAINER_NAME} || true
-        docker run -d --name ${CONTAINER_NAME} -p 8080:8080 -e DEMO_NAME=${DEMO_NAME} reskeartur/github-actions-demo:latest
-        EOF
-      shell: bash
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+          DEMO_NAME: ${{ vars.DEMO_NAME }}
+        run: |
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
+          docker pull reskeartur/github-actions-demo:latest
+          docker stop ${CONTAINER_NAME} || true
+          docker rm ${CONTAINER_NAME} || true
+          docker run -d --name ${CONTAINER_NAME} -p 8080:8080 -e DEMO_NAME=${DEMO_NAME} reskeartur/github-actions-demo:latest
+          EOF
+        shell: bash
+
+      - name: Wait for application to be available
+        run: sleep 10
+
+      - name: Check application health
+        run: curl --fail http://localhost:8080/actuator/health
