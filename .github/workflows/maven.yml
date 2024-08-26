@@ -41,12 +41,10 @@ jobs:
         VPS_USER: ${{ secrets.VPS_USER }}
         VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
       run: |
-        echo "$SSH_PRIVATE_KEY" > key.pem
-        chmod 600 key.pem
-        ssh -i key.pem -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
-          docker pull docker.io/reskeartur/github-actions-demo
-          docker stop github-actions-demo || true
-          docker rm github-actions-demo || true
-          docker run -d --name github-actions-demo -p 8080:8080 docker.io/reskeartur/github-actions-demo
-        EOF
+        sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
+          docker pull reskeartur/github-actions-demo:latest
+          docker stop quizzionaire || true
+          docker rm quizzionaire || true
+          docker run -d --name quizzionaire -p 8080:8080 reskeartur/github-actions-demo:latest
+          EOF
       shell: bash
