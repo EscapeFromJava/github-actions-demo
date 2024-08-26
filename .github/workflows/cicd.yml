@@ -4,13 +4,13 @@ on:
   push:
     branches: [ "master" ]
 
+env:
+  VPS_HOST: ${{ secrets.VPS_HOST }}
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
-    env:
-      VPS_HOST: ${{ secrets.VPS_HOST }}
 
     steps:
       - name: Checkout
