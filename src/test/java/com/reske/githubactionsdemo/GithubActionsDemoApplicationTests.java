@@ -20,7 +20,7 @@ class GithubActionsDemoApplicationTests {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .isEqualTo("Hello World");
+                .isEqualTo("Hello New World");
     }
 
 }
