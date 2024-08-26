@@ -39,12 +39,11 @@ jobs:
         VPS_USER: ${{ secrets.VPS_USER }}
         VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
-        DEMO_NAME: ${{ vars.DEMO_NAME }}
       run: |
         sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
         docker pull reskeartur/github-actions-demo:latest
         docker stop ${CONTAINER_NAME} || true
         docker rm ${CONTAINER_NAME} || true
-        docker run -d --name ${CONTAINER_NAME} -p 8080:8080 -e DEMO_NAME=${DEMO_NAME} reskeartur/github-actions-demo:latest
+        docker run -d --name ${CONTAINER_NAME} -p 8080:8080 -e DEMO_NAME=${{ vars.DEMO_NAME }} reskeartur/github-actions-demo:latest
         EOF
       shell: bash
