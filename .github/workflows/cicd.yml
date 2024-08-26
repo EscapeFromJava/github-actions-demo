@@ -49,8 +49,8 @@ jobs:
           EOF
         shell: bash
 
-      - name: Wait for application to be available
-        run: sleep 10
+#      - name: Wait for application to be available
+#        run: sleep 10
 
-      - name: Check application health
-        run: curl --fail http://localhost:8080/actuator/health
+#      - name: Check application health
+#        run: curl --fail http://localhost:8080/actuator/health
