@@ -42,9 +42,9 @@ jobs:
         VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
       run: |
         sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} <<EOF
-          docker pull reskeartur/github-actions-demo:latest
-          docker stop quizzionaire || true
-          docker rm quizzionaire || true
-          docker run -d --name quizzionaire -p 8080:8080 reskeartur/github-actions-demo:latest
-          EOF
+        docker pull reskeartur/github-actions-demo:latest
+        docker stop quizzionaire || true
+        docker rm quizzionaire || true
+        docker run -d --name quizzionaire -p 8080:8080 reskeartur/github-actions-demo:latest
+        EOF
       shell: bash
